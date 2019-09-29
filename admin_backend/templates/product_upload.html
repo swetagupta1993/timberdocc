@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="{% url 'admin_product' %}" method="POST" enctype="multipart/form-data" id="form">
+        {% csrf_token %}
+        <input type="file" id="file1" name="file1"/>
+        <input type="file" id="file2" name="file2">
+        <input type="submit" value="upload">
+    </form>
+    <p id="progress-wrp">0</p>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function(e){
+        $("#form").on("submit", function(e){
+            e.preventDefault();
+
+            var formData = new FormData();
+            formData.append("file1", $("#file1")[0].files[0]);
+            formData.append("file2", $("#file2")[0].files[0]);
+            formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'admin_product' %}",
+                xhr: function () {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload) {
+                        myXhr.upload.addEventListener('progress', progressHandling, false);
+                    }
+                    return myXhr;
+                },
+                success: function (data) {
+                    alert(data.data);
+                },
+                error: function (error) {
+                    // handle error
+                    alert("There is ana error while file uploading");
+                },
+                async: true,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                timeout: 60000
+            });
+        });
+    });
+
+     function progressHandling(event) {
+        var percent = 0;
+        var position = event.loaded || event.position;
+        var total = event.total;
+        var progress_bar_id = "#progress-wrp";
+        if (event.lengthComputable) {
+            percent = Math.ceil(position / total * 100);
+        }
+        // update progressbars classes so it fits your code
+        <!--$(progress_bar_id + " .progress-bar").css("width", +percent + "%");-->
+        <!--$(progress_bar_id + " .status").text(percent + "%");-->
+        $(progress_bar_id).text(percent);
+
+    }
+</script>
+</body>
+</html>

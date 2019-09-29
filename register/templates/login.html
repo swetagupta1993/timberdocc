@@ -1,0 +1,79 @@
+
+{% extends 'website_template.html' %}
+{% load static %}
+{% block content %}
+<!-- breadcrumbs -->
+	<div class="breadcrumbs">
+		<div class="container">
+			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+				<li><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+				<li class="active">Login Page</li>
+			</ol>
+		</div>
+	</div>
+<!-- //breadcrumbs -->
+<!-- login -->
+	<div class="login">
+		<div class="container">
+			<h3 class="animated wow zoomIn" data-wow-delay=".5s">Login Form</h3>
+			<p class="est animated wow zoomIn" data-wow-delay=".5s">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia 
+				deserunt mollit anim id est laborum.</p>
+			<div class="login-form-grids animated wow slideInUp" data-wow-delay=".5s">
+				<form id="login-form">
+					{% csrf_token %}
+					<input type="text" placeholder="Username" required=" " name="username">
+					<input type="password" placeholder="Password" required=" " name="password">
+					<div class="forgot">
+						<a href="#">Forgot Password?</a>
+					</div>
+					<input type="submit" value="Login">
+				</form>
+			</div>
+			<h4 class="animated wow slideInUp" data-wow-delay=".5s">For New People</h4>
+			<p class="animated wow slideInUp" data-wow-delay=".5s"><a href="register.html">Register Here</a> (Or) go back to <a href="index.html">Home<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a></p>
+		</div>
+	</div>
+<!-- //login -->
+<!-- footer -->
+	{% endblock %}
+
+{% block css %}
+<style>
+	.class{
+		color: red;
+	}
+</style>
+{% endblock %}
+
+{% block js %}
+<script>
+
+	$(document).ready(function(e){
+		$("#login-form").on("submit", function(e){
+			e.preventDefault();
+			<!--Validation Part Start-->
+
+			<!--Validation Part Ends-->
+			$.ajax({
+				type: 'POST',
+				url: "{% url 'login' %}",
+				data: $("#login-form").serialize(),
+				success: function(data){
+					console.log(data);
+					if(data.type == "success"){
+						window.location.href = "{% url 'homepage' %}"
+					}else{
+						alert(data.message);
+					}
+				},
+				error: function(error){
+					console.log(error);
+					alert(error.responseText);
+				}
+			});
+		});
+	});
+</script>
+{% endblock %}
+
+

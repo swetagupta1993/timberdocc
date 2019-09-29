@@ -1,0 +1,29 @@
+"""ecomm URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/2.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+from website import urls as website_urls
+from register import urls as login_urls
+from product import urls as product_urls
+from admin_backend import urls as admin_backend_urls
+
+urlpatterns = [
+    path('myfavorite/', admin.site.urls),
+    path('', include(website_urls)),
+    path('auth/', include(login_urls)),
+    path('product/', include(product_urls)),
+    path('admin/', include(admin_backend_urls)),
+]
